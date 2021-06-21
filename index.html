@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Kēlen Writing System</title>
+	<script src="./jquery-3.6.0.min.js"></script>	
+	<link rel="stylesheet" href="style.css">      
+</head>
+<body>
+	<h1>The Kēlen Writing System</h1> 
+	<h2>What is this?</h2>
+	<p>Kēlen is a constructed alien language created by Sylvia Sotomayor. Among some other interesting linguistic concepts Kēlen also uses three
+		different writing sytems: A regular script, a box script and a "ceremonial interlace alphabet".</p>
+	<p>I was intruiged by these writing systems and especially the interlace alphabet. This page attempts to automatically translate
+		romanized Kēlen into these writing systems.</p>
+	</p>
+	<p>You can find out all about Kēlen at <a href="https://www.terjemar.net/kelen/kelen.php">https://www.terjemar.net/kelen/kelen.php</a>. 
+		Please refer to those pages for any information on the language, its creator or the back story. On this page below the interactive 
+		part you can only find a short excerpt about the alphabet, the elements there are clickable so you can easily input your Kēlen string 
+		regardless of what keyboard layout you are using.</p>
+	</p>
+	<h2>Kēlen Writer</h2>
+	<div>
+		<input id="edRomanization" type="text" placeholder="selnirre anlāsa sū-lānōraen;" style="width: 80%"></input>
+	</div>
+	<div>
+		<canvas id="KelenScript"></canvas>
+		<p class="indent" id="KelenScriptErrors"></p>
+	</div>	
+	<div>
+		
+	</div>
+	<h2>The Kelen Alphabet.</h2>
+	<h3>Consonants</h3>
+	<p>Traditionally, Kēlen claims five stops (<span class="kelen" data-kelen>ansāorīki anpōhi</span>). They are written thus:</p>
+	<table>
+		<tbody>
+			<tr data-kelen="p"><td><span class="kelen">p</span> (<span class="kelen" data-kelen>japōha japiēxa</span>)</td><td><img src="font/p.gif" alt="p"> or <img src="font/p2.gif" alt="p"></td></tr>
+			<tr data-kelen="t"><td><span class="kelen">t</span> (<span class="kelen" data-kelen>japōha japīra</span>)</td><td><img src="font/t.gif" alt="t"></td></tr>
+			<tr data-kelen="s"><td><span class="kelen">s</span> (<span class="kelen" data-kelen>japōha jaxīwa</span>)</td><td><img src="font/s.gif" alt="s"></td></tr>
+			<tr data-kelen="c"><td><span class="kelen">c</span> (<span class="kelen" data-kelen>japōha jūsne</span>)</td><td><img src="font/c.gif" alt="c"> or <img src="font/c2.gif" alt="c"></td></tr>
+			<tr data-kelen="k"><td><span class="kelen">k</span> (<span class="kelen" data-kelen>japōha jakōλa</span>)</td><td><img src="font/k.gif" alt="k"> or <img src="font/k2.gif" alt="k"></td></tr>
+		</tbody>
+	</table>
+
+	<p>There are the five fricatives (<span class="kelen" data-kelen>ansāorīki ankōrji</span>) to complement the five stops:</p>
+	<table>
+		<tbody>
+			<tr data-kelen="w"><td><span class="kelen">w</span> (<span class="kelen" data-kelen>jakōrja japiēxa</span>)</td><td><img src="font/w.gif" alt="w"> or <img src="font/w2.gif" alt="w"> or <img src="font/w3.gif" alt="w"></td></tr>
+			<tr data-kelen="þ"><td><span class="kelen">þ</span> (<span class="kelen" data-kelen>jakōrja japīra</span>)</td><td><img src="font/th.gif" alt="th"></td></tr>
+			<tr data-kelen="x"><td><span class="kelen">x</span> (<span class="kelen" data-kelen>jakōrja jaxīwa</span>)</td><td><img src="font/x.gif" alt="sh"></td></tr>
+			<tr data-kelen="j"><td><span class="kelen">j</span> (<span class="kelen" data-kelen>jakōrja jūsne</span>)</td><td><img src="font/j.gif" alt="j"> or <img src="font/j2.gif" alt="j"> or <img src="font/j3.gif" alt="j"></td></tr>
+			<tr data-kelen="h"><td><span class="kelen">h</span> (<span class="kelen" data-kelen>jakōrja jakōλa</span>)</td><td><img src="font/h.gif" alt="h"> or <img src="font/h2.gif" alt="h"> or <img src="font/h3.gif" alt="h"></td></tr>
+		</tbody>
+	</table>
+
+	<p>Then the fourteen sonorants (<span class="kelen" data-kelen>ansāorīki antāni</span>):</p>
+	<table>
+		<tbody>
+			<tr><td data-kelen="m"><span class="kelen">m</span> (<span class="kelen" data-kelen>jahīña japiēxa</span>)</td><td data-kelen="m"><img src="font/m.gif" alt="m"></td>
+				<td data-kelen="m">and&nbsp;&nbsp;&nbsp; <span class="kelen">mm</span> (<span class="kelen" data-kelen>jahīña japiēxa jōma</span>)</td><td data-kelen="mm"><img src="font/mm.gif" alt="mm"></td></tr>
+			<tr><td data-kelen="n"><span class="kelen">n</span> (<span class="kelen" data-kelen>jahīña japīra</span>)</td><td data-kelen="n"><img src="font/n.gif" alt="n"></td>
+				<td data-kelen="nn">and&nbsp;&nbsp;&nbsp; <span class="kelen">nn</span> (<span class="kelen" data-kelen>jahīña japīra jōma</span>)</td><td data-kelen="nn"><img src="font/nn.gif" alt="nn"></td></tr>
+			<tr><td data-kelen="ñ"><span class="kelen">ñ</span> (<span class="kelen" data-kelen>jahīña jūsne</span>)</td><td data-kelen="ñ"><img src="font/nj.gif" alt="ñ"></td>
+				<td data-kelen="ññ">and&nbsp;&nbsp;&nbsp; <span class="kelen">ññ</span> (<span class="kelen" data-kelen>jahīña jūsne jōma</span>)</td><td data-kelen="ññ"><img src="font/nnj.gif" alt="ññ"></td></tr>
+			<tr><td data-kelen="ŋ"><span class="kelen">ŋ</span> (<span class="kelen" data-kelen>jahīña jakōλa</span>)</td><td data-kelen="ŋ"><img src="font/ng.gif" alt="ŋ"></td>
+				<td data-kelen="ŋŋ">and&nbsp;&nbsp;&nbsp; <span class="kelen">ŋŋ</span> (<span class="kelen" data-kelen>jahīña jakōλa jōma</span>)</td><td data-kelen="ŋŋ"><img src="font/nng.gif" alt="ŋŋ"></td></tr>
+			<tr><td>&nbsp;</td></tr>
+			<tr><td data-kelen="l"><span class="kelen">l</span> (<span class="kelen" data-kelen>jatāna</span>)</td><td data-kelen="l"><img src="font/l.gif" alt="l"></td>
+				<td data-kelen="ll">and&nbsp;&nbsp;&nbsp; <span class="kelen">ll</span> (<span class="kelen" data-kelen>jatāna jōma</span>)</td><td data-kelen="ll"><img src="font/ll.gif" alt="ll"></td>
+				<td data-kelen="λ">and&nbsp;&nbsp;&nbsp; <span class="kelen">λ</span> (<span class="kelen" data-kelen>jatāna jūsne</span>)</td><td data-kelen="λ"><img src="font/lj.gif" alt="λ"></td></tr>
+			<tr><td data-kelen="r"><span class="kelen">r</span> (<span class="kelen" data-kelen>jatāna jarūsa</span>)</td><td data-kelen="r"><img src="font/r.gif" alt="r"></td>
+				<td data-kelen="rr">and&nbsp;&nbsp;&nbsp; <span class="kelen">rr</span> (<span class="kelen" data-kelen>jatāna jarūsa jōma</span>)</td><td data-kelen="lr"><img src="font/rr.gif" alt="rr"></td>
+				<td data-kelen="rj">and&nbsp;&nbsp;&nbsp; <span class="kelen">rj</span> (<span class="kelen" data-kelen>jatāna jarūsa jūsne</span>)</td><td data-kelen="rj"><img src="font/rj.gif" alt="rj"></td></tr>
+		</tbody>
+	</table>
+
+	<h3>Vowels</h3>
+	<p>The vowels come in short and long:</p>
+	<table>
+		<tbody>
+			<tr><td data-kelen="i"><span class="kelen">i</span></td><td data-kelen="i"><img src="font/i.gif" alt="i"></td><td data-kelen="ī">and&nbsp;&nbsp;&nbsp; <span class="kelen">ī</span></td><td data-kelen="ī"><img src="font/ii.gif" alt="ī"></td></tr>
+			<tr><td data-kelen="e"><span class="kelen">e</span></td><td data-kelen="e"><img src="font/e.gif" alt="e"></td><td data-kelen="ē">and&nbsp;&nbsp;&nbsp; <span class="kelen">ē</span></td><td data-kelen="ē"><img src="font/ee.gif" alt="ē"></td></tr>
+			<tr><td data-kelen="a"><span class="kelen">a</span></td><td data-kelen="a"><img src="font/a.gif" alt="a"></td><td data-kelen="ā">and&nbsp;&nbsp;&nbsp; <span class="kelen">ā</span></td><td data-kelen="ā"><img src="font/aa.gif" alt="ā"></td></tr>
+			<tr><td data-kelen="o"><span class="kelen">o</span></td><td data-kelen="o"><img src="font/o.gif" alt="o"></td><td data-kelen="ō">and&nbsp;&nbsp;&nbsp; <span class="kelen">ō</span></td><td data-kelen="ō"><img src="font/oo.gif" alt="ō"></td></tr>
+			<tr><td data-kelen="u"><span class="kelen">u</span></td><td data-kelen="u"><img src="font/u.gif" alt="u"></td><td data-kelen="ū">and&nbsp;&nbsp;&nbsp; <span class="kelen">ū</span></td><td data-kelen="ū"><img src="font/uu.gif" alt="ū"></td></tr>
+		</tbody>
+	</table>
+
+	<p>The diphtongs also come in short and long:</p>
+	<table>
+		<tbody>
+			<tr><td data-kelen="ae"><span class="kelen">ae</span></td><td data-kelen="ae"><img src="font/ae.gif" alt="ae"></td><td data-kelen="āe">and&nbsp;&nbsp;&nbsp; <span class="kelen">āe</span></td><td data-kelen="āe"><img src="font/aae.gif" alt="āe"></td></tr>
+			<tr><td data-kelen="ao"><span class="kelen">ao</span></td><td data-kelen="ao"><img src="font/ao.gif" alt="ao"></td><td data-kelen="āo">and&nbsp;&nbsp;&nbsp; <span class="kelen">āo</span></td><td data-kelen="āo"><img src="font/aao.gif" alt="āo"></td></tr>
+			<tr><td data-kelen="ie"><span class="kelen">ie</span></td><td data-kelen="ie"><img src="font/ie.gif" alt="ie"></td><td data-kelen="iē">and&nbsp;&nbsp;&nbsp; <span class="kelen">iē</span></td><td data-kelen="iē"><img src="font/iee.gif" alt="iē"></td></tr>
+		</tbody>
+	</table>
+	<p data-kelen="y">The vowel <span class="kelen">y</span>, which occurs in Eastern Kēlen, is usually written the same way as <span class="kelen">i</span> <img src="font/i.gif" alt="i">.</p>
+
+	<p>Punctuation consists of a 
+	<span data-kelen=" "><img src="font/space.gif" alt="&nbsp;">
+	to mark spaces between words (this is optional)</span>,<br>
+	<span data-kelen=";"></span>and a <img src="font/end.gif" alt=";"> (<span class="kelen">;</span>) to mark the end of clauses or sentences.</span>
+	</p>
+	<h3>An example</h3>
+	<p>
+	<img src="font/s.gif" alt="s"><img src="font/e.gif" alt="e"><img src="font/l.gif" alt="l"><img src="font/n.gif" alt="n"><img src="font/i.gif" alt="i"><img src="font/rr.gif" alt="rr"><img src="font/space.gif" alt="&nbsp;"><img src="font/a.gif" alt="a"><img src="font/n.gif" alt="n"><img src="font/l.gif" alt="l"><img src="font/aa.gif" alt="ā"><img src="font/s.gif" alt="s"><img src="font/a.gif" alt="a"><img src="font/space.gif" alt="&nbsp;"><img src="font/s.gif" alt="s"><img src="font/uu.gif" alt="ū"><img src="font/l.gif" alt="l"><img src="font/aa.gif" alt="ā"><img src="font/n.gif" alt="n"><img src="font/oo.gif" alt="ō"><img src="font/r.gif" alt="r"><img src="font/ae.gif" alt="ae"><img src="font/n.gif" alt="n"><img src="font/end.gif" alt=";">&nbsp;&nbsp;&nbsp;is the equivalent of <br>
+	<span class="kelen" data-kelen>selnirre anlāsa sū-lānōraen;</span> "We (1p-paucal) give you (2p-plural) welcome at(to) Lānōraen."
+	</p>
+	<h3>Alphabetical Order</h3>
+	<p>Kēlen alphabetical order was finalized before the writing system 
+	existed in its current form. Not all of the letters above are included. 
+	Those that aren't officially included are unofficially included with 
+	other letters. For example, the alphabetical order does not distinguish 
+	between <img src="font/a.gif" alt="a"> and  <img src="font/aa.gif" alt="ā">, putting them both under <img src="font/a.gif" alt="a">. I have put extra letters in brackets next to the letters they are listed with.</p>
+
+	<p>
+	<img src="font/a.gif" alt="a"> {<img src="font/aa.gif" alt="ā">  <img src="font/ae.gif" alt="ae">  <img src="font/aae.gif" alt="āe">  <img src="font/ao.gif" alt="ao">  <img src="font/aao.gif" alt="āo">} 
+	<img src="font/e.gif" alt="e"> {<img src="font/ee.gif" alt="ē">} 
+	<img src="font/o.gif" alt="o"> {<img src="font/oo.gif" alt="ō">} 
+	<img src="font/i.gif" alt="i"> {<img src="font/ii.gif" alt="ī">} 
+	<img src="font/ie.gif" alt="ie"> {<img src="font/iee.gif" alt="iē">} 
+	<img src="font/u.gif" alt="u"> {<img src="font/uu.gif" alt="ū">} 
+	<img src="font/l.gif" alt="l"> {<img src="font/ll.gif" alt="ll">  <img src="font/lj.gif" alt="lj">} 
+	<img src="font/nj.gif" alt="ñ"> {<img src="font/nnj.gif" alt="ññ">} 
+	<img src="font/t.gif" alt="t"> 
+	<img src="font/n.gif" alt="n"> {<img src="font/nn.gif" alt="nn">} 
+	<img src="font/k.gif" alt="k"> {<img src="font/k2.gif" alt="k">} 
+	<img src="font/th.gif" alt="th"> 
+	<img src="font/m.gif" alt="m"> {<img src="font/mm.gif" alt="mm">  <img src="font/ng.gif" alt="ŋ">  <img src="font/nng.gif" alt="ŋŋ">} 
+	<img src="font/c.gif" alt="c"> {<img src="font/c2.gif" alt="c">} 
+	<img src="font/s.gif" alt="s"> 
+	<img src="font/p.gif" alt="p"> {<img src="font/p2.gif" alt="p">} 
+	<img src="font/w.gif" alt="w"> {<img src="font/w2.gif" alt="w">  <img src="font/w3.gif" alt="w">} 
+	<img src="font/j.gif" alt="j"> {<img src="font/j2.gif" alt="j">  <img src="font/j3.gif" alt="j">} 
+	<img src="font/r.gif" alt="r"> {<img src="font/rr.gif" alt="rr">  <img src="font/rj.gif" alt="rj">} 
+	<img src="font/x.gif" alt="sh"> 
+	<img src="font/h.gif" alt="h"> {<img src="font/h2.gif" alt="h">  <img src="font/h3.gif" alt="h">}
+	</p>
+
+	<p>Children have been known to recite the following rhyme:</p>
+
+	<p>
+	<span class="kelen">ā</span>, <span class="kelen">ē</span>, <span class="kelen">ō</span>,<br>
+	<span class="kelen">ī</span>, <span class="kelen">iē</span>, <span class="kelen">ū</span>,<br>
+	<span class="kelen">lā</span>, <span class="kelen">ñē</span>, <span class="kelen">tō</span>,<br>
+	<span class="kelen">nā</span>, <span class="kelen">kā</span>, <span class="kelen">þō</span>,<br>
+	<span class="kelen">mū</span>, <span class="kelen">cē</span>, <span class="kelen">sū</span>,<br>
+	<span class="kelen">pāo</span>, <span class="kelen">wē</span>, <span class="kelen">jē</span>,<br>
+	<span class="kelen">rā</span>, <span class="kelen">xō</span>, <span class="kelen">hē</span>.
+	</p>
+
+	<p>The romanization, being for us humans, has a different alphabetical 
+	order than the native Kēlen script. The romanization is alphabetized 
+	like so:</p>
+	<p><span class="kelen">a</span>, <span class="kelen">ā</span>, <span class="kelen">ae</span>, <span class="kelen">āe</span>, <span class="kelen">ao</span>, <span class="kelen">āo</span>, <span class="kelen">c</span>, <span class="kelen">e</span>, <span class="kelen">ē</span>, <span class="kelen">h</span>, <span class="kelen">i</span>, <span class="kelen">ī</span>, <span class="kelen">ie</span>, <span class="kelen">iē</span>, <span class="kelen">j</span>, <span class="kelen">k</span>, <span class="kelen">l</span>, <span class="kelen">ll</span>, <span class="kelen">λ</span>, <span class="kelen">m</span>, <span class="kelen">mm</span>, <span class="kelen">n</span>, <span class="kelen">nn</span>, <span class="kelen">ñ</span>, <span class="kelen">ññ</span>, <span class="kelen">ŋ</span>, <span class="kelen">ŋŋ</span>, <span class="kelen">o</span>, <span class="kelen">ō</span>, <span class="kelen">p</span>, <span class="kelen">r</span>, <span class="kelen">rr</span>, <span class="kelen">rj</span>, <span class="kelen">s</span>, <span class="kelen">t</span>, <span class="kelen">þ</span>, <span class="kelen">u</span>, <span class="kelen">ū</span>, <span class="kelen">w</span>, <span class="kelen">x</span></p>
+
+	<div id='allGlyphs'></div>
+</body>
+
+<script>
+
+	var edRomanizationCaretPos = 0;
+
+	// Map a romanization to the filename of a Kēlen character. File-extension is added when used.
+	var roman2font = new Map();
+	roman2font.set('p', 'p');
+	roman2font.set('t', 't');
+	roman2font.set('s', 's');
+	roman2font.set('c', 'c');
+	roman2font.set('k', 'k');
+
+	roman2font.set('w', 'w');
+	roman2font.set('þ', 'th');
+	roman2font.set('x', 'x');
+	roman2font.set('j', 'j');
+	roman2font.set('h', 'h');
+		
+	roman2font.set('m', 'm');
+	roman2font.set('n', 'n');
+	roman2font.set('ñ', 'nj');
+	roman2font.set('ŋ', 'ng');
+
+	roman2font.set('mm', 'mm');
+	roman2font.set('nn', 'nn');
+	roman2font.set('ññ', 'nnj');
+	roman2font.set('ŋŋ', 'nng');
+	
+	roman2font.set('l',  'l'); 
+	roman2font.set('ll', 'll');
+	roman2font.set('λ',  'lj'); 
+	roman2font.set('r',  'r'); 
+	roman2font.set('rr', 'rr');
+	roman2font.set('rj', 'rj');
+
+	roman2font.set('i', 'i');
+	roman2font.set('e', 'e');
+	roman2font.set('a', 'a');
+	roman2font.set('o', 'o');
+	roman2font.set('u', 'u');
+	
+	roman2font.set('ī', 'ii');
+	roman2font.set('ē', 'ee');
+	roman2font.set('ā', 'aa');
+	roman2font.set('ō', 'oo');
+	roman2font.set('ū', 'uu');
+	
+	roman2font.set('ae', 'ae');
+	roman2font.set('ao', 'ao');
+	roman2font.set('ie', 'ie');
+
+	roman2font.set('āe', 'aae');
+	roman2font.set('āo', 'aao');
+	roman2font.set('iē', 'iee');
+	
+	// Extra vowel
+	roman2font.set('y', 'i');
+
+	// Punctuation
+	roman2font.set('_', 'space');
+	roman2font.set(';', 'end');
+	
+	// Characters that are legal but not written.
+	roman2font.set('-', 'skip');
+	roman2font.set('\'', 'skip');
+
+	function update_url() {
+		// Create a linkeable URL to capture the current setup.
+		
+		console.log('update_url()');
+		
+		var url = window.location.protocol + '//' + window.location.host + window.location.pathname;
+	
+		url += '?r=' + $('#edRomanization').val();
+		
+		history.replaceState(null, '', url);
+	}
+	
+	function parse_url() {
+		// Parse the query-string to recreate a saved setup from an URL.
+		// console.log('parse_url()');
+		
+		var vars = {}
+		if (window.location.href.indexOf('?') != -1) { 
+			var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+			for (var i = 0; i < hashes.length; i++)
+			{
+				var hash = hashes[i].split('=');
+				vars[hash[0]] = decodeURI(hash[1]);
+			}
+		}
+
+		if (vars['r']) {
+			$('#edRomanization').val(vars['r']);
+		}
+	}
+	
+	function kelenClick(e) {
+		console.log('kelenClick()');
+		
+		e.stopPropagation();
+		console.log(e);
+
+		var input = '';
+
+		// Find the nearest parent of the clicked element that has a data-kelen or
+		// data-kelen attribute.
+		var o = e.target;
+		while(o) {
+			if (o.hasAttribute('data-kelen')) {
+				roman = o.getAttribute('data-kelen');
+				if (roman) {
+					input = '/' + roman + '/';
+					break;
+				}
+				
+				input = o.innerHTML;
+				break;
+			}  
+			
+			o = o.parentElement;
+		}
+		
+		if (input) {
+			// Got input. "Type" that romanized Kēlen into the input field.
+			var oldval = $('#edRomanization').val();
+			var newval = oldval.substring(0, edRomanizationCaretPos) + input + oldval.substring(edRomanizationCaretPos); 
+			$('#edRomanization').val(newval);
+			
+			update_url();
+			updateKelenScript();
+
+			edRomanizationCaretPos = edRomanizationCaretPos + 2 + input.length;
+		}
+
+	}
+
+	function updateKelenScript() {
+		// Find all the glyphs that make up the input word in Kēlen and draw them
+		// onto a canvas.  
+		
+		var roman = $('#edRomanization').val().toLowerCase().replace(/ /g, '_');
+		console.log('updateKelenScript("' + roman + '")');
+
+		$('#KelenScriptErrors').empty();
+		var glyphs = [];
+
+		while(roman) {
+			// Figure out what character to render next.
+			var char = '';
+
+			// If there is a '/' at the start, find the next and extract that part. This
+			// will absolutely be used then!
+			if (roman.substring(0,1) == '/') {
+				roman = roman.substring(1);
+				var p = roman.indexOf('/');
+				if (p == -1)
+				{
+					$('#KelenScriptErrors').append('<span>Closing / is missing</span><br>');
+					roman = '';
+				} else {
+					char = roman.substring(0,p);
+					roman = roman.substring(p+1);
+				}
+			} else {
+				// Check for diphtong first.
+				char = roman.substring(0,2);
+			
+				// Is this two-latin-letter-sequence a Kēlen-diphtong?
+				if (!roman2font.has(char)) {
+					// Not a diphtong, use single character.
+					char = roman.substring(0,1);
+				}
+
+				// go on with the rest of the romanization.
+				roman = roman.substring(char.length);
+			}
+
+			// Have we got a character? This can fail if the /*/-Notation is used wrongly.
+			if (char) {
+				// Is it a valid Kēlen character?
+				if (roman2font.has(char)) {
+					// Yes. Do we want a glyph for it or is it a skip?
+					if (roman2font.get(char) == 'skip') {
+						// No. Silently skip.
+					} else {
+						// Add an image to render.
+						glyphs.push($('#kelen-glyph-' + roman2font.get(char))[0]);
+					}
+				} else {
+					// No. Skip with error message.
+					$('#KelenScriptErrors').append('<span><span class="kelen">' + char + '</span> is not Kēlen</span><br>');				
+				}
+			} else {
+				// Something went wrong that does not warrant parsing the rest of
+				// the input. Bail.
+				break;
+			}
+		}
+
+		// Now render all the glyphs to the canvas.
+		var KelenScript = $('#KelenScript')[0];
+   		var context = KelenScript.getContext("2d");
+   		
+		var w = 0;
+		var h = 0;
+		
+		for (var glyph of glyphs) {
+			w = w + glyph.width;
+			h = Math.max(h, glyph.height);
+		};
+
+		KelenScript.width = w;
+		KelenScript.height = h;
+
+		var x = 0;
+		for (var glyph of glyphs) {
+			context.drawImage(glyph, x, 0),
+			x = x + glyph.width;
+		};
+	}
+
+	$(document).ready(function() {
+		// Main entry point.
+		console.log('document.ready()');
+	
+		// Overwrite initial UI settings with parameters from the URL if specified.
+		parse_url();
+			
+		// Wire UI control events.
+		edRomanizationCaretPos = $('#edRomanization').val().length;
+		$('#edRomanization').on('blur', function(e) {
+			edRomanizationCaretPos = $('#edRomanization')[0].selectionStart;				
+		});
+
+		$('#edRomanization').on('keyup', function(e) {
+			update_url();
+			updateKelenScript();
+		});
+
+		$('*[data-kelen]').click(kelenClick);
+		
+		// Preload all glyphs with proper ids.
+		roman2font.forEach(function(value, key) {
+			$('#allGlyphs').append('<img id="kelen-glyph-' + value + '" src="font/' + value + '.gif" alt="' + key + '" />');
+		});
+
+		// Fire after everything has loaded. Including our new images.
+		$(window).on("load", function() {
+    		console.log('window.load()');
+			update_url();
+			updateKelenScript();
+		});
+	});
+
+</script>
+	
+</html>

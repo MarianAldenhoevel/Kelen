@@ -1,0 +1,2 @@
+- General licensing
+- What's up with the variant-letters in the script. Which one to pick?

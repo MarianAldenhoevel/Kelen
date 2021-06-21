@@ -1,0 +1,25 @@
+body {
+	font: 16px normal Arial,Helvetica,Verdana,sans-serif;
+	line-height: 1.5em;
+}
+
+img	{
+	vertical-align: middle;
+}
+
+tr {
+	vertical-align: top;
+}
+
+.kelen {
+	color: #006600; 
+	font-weight: bold;
+}
+
+#allGlyphs {
+	display: none;
+}
+
+#KelenScriptErrors {
+	color: red;
+}
