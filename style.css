@@ -23,3 +23,13 @@ tr {
 #KelenScriptErrors {
 	color: red;
 }
+
+table.cia td {
+	padding: 1em;
+}
+
+svg.cia {
+	display: inline-block;
+	position: relative;
+  	vertical-align: top;
+}

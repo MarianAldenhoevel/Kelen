@@ -4,11 +4,57 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Kēlen Writing System</title>
-	<script src="./jquery-3.6.0.min.js"></script>	
+	<script src="./jquery-3.6.0.min.js"></script>
+	<script src="./d3.min.js"></script>	
 	<link rel="stylesheet" href="style.css">      
 </head>
 <body>
-	<h1>The Kēlen Writing System</h1> 
+	<h1>The Kēlen Writing System</h1>
+	
+	<h2>Ceremonial interlace alphabet</h2>
+	<a href="https://commons.wikimedia.org/wiki/K%C4%93len">https://commons.wikimedia.org/wiki/Kēlen</a>
+	<table class="cia">
+		<tbody>
+			<tr>
+				<td data-kelen="a"> 
+					<span class="kelen" >a</span>&nbsp;
+					<img src="font/a.gif" alt="a">&nbsp;
+					<svg class="kelen cia" id="ceremonial-a"></svg>
+				</td>
+				<td data-kelen="ñ"> 
+					<span class="kelen" >ñ</span>&nbsp;
+					<img src="font/nj.gif" alt="ñ">&nbsp;
+					<svg class="cia" id="ceremonial-nj"></svg>
+				</td>
+				<td data-kelen="e"> 
+					<span class="kelen" >e</span>&nbsp;
+					<img src="font/e.gif" alt="e">&nbsp;
+					<svg class="cia" id="ceremonial-e"></svg>
+				</td>
+				<td data-kelen="l"> 
+					<span class="kelen" >l</span>&nbsp;
+					<img src="font/l.gif" alt="l">&nbsp;
+					<svg class="cia" id="ceremonial-l"></svg>
+				</td>
+				<td data-kelen="o"> 
+					<span class="kelen" >o</span>&nbsp;
+					<img src="font/o.gif" alt="o">&nbsp;
+					<svg class="cia" id="ceremonial-o"></svg>
+				</td>
+				<td data-kelen="i"> 
+					<span class="kelen" >i</span>&nbsp;
+					<img src="font/i.gif" alt="i">&nbsp;
+					<svg class="cia" id="ceremonial-i"></svg>
+				</td>
+				<td data-kelen="ie"> 
+					<span class="kelen" >ie</span>&nbsp;
+					<img src="font/ie.gif" alt="ie">&nbsp;
+					<svg class="cia" id="ceremonial-ie"></svg>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
 	<h2>What is this?</h2>
 	<p>Kēlen is a constructed alien language created by Sylvia Sotomayor. Among some other interesting linguistic concepts Kēlen also uses three
 		different writing sytems: A regular script, a box script and a "ceremonial interlace alphabet".</p>
@@ -28,9 +74,9 @@
 		<canvas id="KelenScript"></canvas>
 		<p class="indent" id="KelenScriptErrors"></p>
 	</div>	
-	<div>
-		
+	<div>	
 	</div>
+
 	<h2>The Kelen Alphabet.</h2>
 	<h3>Consonants</h3>
 	<p>Traditionally, Kēlen claims five stops (<span class="kelen" data-kelen>ansāorīki anpōhi</span>). They are written thus:</p>
@@ -161,6 +207,446 @@
 
 <script>
 
+	class CIA {
+
+		constructor(svg, kheight, kwidth, kx, ky) {
+			this.svg = svg;
+			this.kheight = kheight;
+			this.kwidth = kwidth;
+			this.kx = kx;
+			this.ky = ky;
+			this.fill = CIA.fill;
+
+			this.ktile = new Array(this.kwidth);
+			for(var x = 0; x < this.kheight; x++) {
+				this.ktile[x] = (new Array(this.kheight)).fill(['', '']);
+			}
+
+			this.kz = new Array(this.kwidth);
+			for(var x = 0; x < this.kheight; x++) {
+				this.kz[x] = (new Array(this.kheight)).fill(-1);
+			}
+
+			this.svg.attr('width', this.kwidth * CIA.cia_unit + CIA.stroke_width).attr('height', this.kheight * CIA.cia_unit + CIA.stroke_width);
+		}
+		
+		cell() {
+			return {
+				left:   this.kx * CIA.cia_unit + CIA.stroke_width/2,
+				bottom: (this.kheight-this.ky) * CIA.cia_unit + CIA.stroke_width/2, 
+				right:  (this.kx+1) * CIA.cia_unit + CIA.stroke_width/2, 
+				top:    (this.kheight-this.ky-1) * CIA.cia_unit + CIA.stroke_width/2
+			};
+		}
+
+		checkz(z, tile) {
+			if (!z) { z = 0 };
+			var oldz = this.kz[this.kx][this.ky];
+			var log = tile + ' at (' + this.kx + ',' + this.ky + ') old-z=' + oldz + ' new-z=' + z;
+			var result = false; 
+
+			if (oldz < z) {
+				log += ' -> render';
+				this.kz[this.kx][this.ky] = z;
+				this.ktile[this.kx][this.ky] = [tile, this.fill];
+				result = true;
+			} else {
+				log += ' -> don\'t render';
+			}
+
+			// console.log(log);
+			return result;
+		}
+
+		fillcell(fill) {
+			var cell = this.cell();
+			this.svg.append('rect')
+				.attr('x', cell.left)
+				.attr('y', cell.top)
+				.attr('width', CIA.cia_unit)
+				.attr('height', CIA.cia_unit)
+				.attr('stroke', 'none')
+				.attr('stroke-width', '0')
+				.attr('fill', fill);
+		}
+
+		drawcellborders(left, top, right, bottom) {
+			var cell = this.cell()
+			
+			if (left) {
+				this.svg.append('line')
+				.style("stroke", CIA.stroke)
+				.style("stroke-width", CIA.stroke_width)
+				.attr("x1", cell.left)
+				.attr("y1", cell.top)
+				.attr("x2", cell.left)
+				.attr("y2", cell.bottom);
+			}
+
+			if (top) {
+				this.svg.append('line')
+				.style("stroke", CIA.stroke)
+				.style("stroke-width", CIA.stroke_width)
+				.attr("x1", cell.left)
+				.attr("y1", cell.top)
+				.attr("x2", cell.right)
+				.attr("y2", cell.top);
+			}
+
+			if (right) {
+				this.svg.append('line')
+				.style("stroke", CIA.stroke)
+				.style("stroke-width", CIA.stroke_width)
+				.attr("x1", cell.right)
+				.attr("y1", cell.top)
+				.attr("x2", cell.right)
+				.attr("y2", cell.bottom);
+			}
+
+			if (bottom) {
+				this.svg.append('line')
+				.style("stroke", CIA.stroke)
+				.style("stroke-width", CIA.stroke_width)
+				.attr("x1", cell.left)
+				.attr("y1", cell.bottom)
+				.attr("x2", cell.right)
+				.attr("y2", cell.bottom);
+			}
+		}
+
+		render() {
+			// console.log('render');
+
+			for(this.kx = 0; this.kx < this.kwidth; this.kx++) {
+				for(this.ky = 0; this.ky < this.kheight; this.ky++) {
+					var tile = this.ktile[this.kx][this.ky];
+					if (tile[0]) {
+						this.fillcell(tile[1]);
+					}
+				}
+			}
+
+			for(this.kx = 0; this.kx < this.kwidth; this.kx++) {
+				for(this.ky = 0; this.ky < this.kheight; this.ky++) {
+					var tile = this.ktile[this.kx][this.ky];
+					// console.log('(' + this.kx + ',' + this.ky + ') ' +  tile);
+
+														          // left,  top,   right, bottom
+					if (tile[0] == 'north')     this.drawcellborders(true,  false, true,  false);
+					if (tile[0] == 'east')      this.drawcellborders(false, true,  false, true );
+					if (tile[0] == 'west')      this.drawcellborders(false, true,  false, true );
+					if (tile[0] == 'south')     this.drawcellborders(true,  false, true,  false);
+					if (tile[0] == 'northwest') this.drawcellborders(false, true,  true,  false);
+					if (tile[0] == 'westnorth') this.drawcellborders(true,  false, false, true );
+					if (tile[0] == 'westsouth') this.drawcellborders(true,  true,  false, false);
+					if (tile[0] == 'northeast') this.drawcellborders(true,  true,  false, false); 
+					if (tile[0] == 'eastnorth') this.drawcellborders(false, false, true,  true );
+					if (tile[0] == 'eastsouth') this.drawcellborders(false, true,  true,  false);
+					if (tile[0] == 'southeast') this.drawcellborders(true,  false, false, true );
+					if (tile[0] == 'southwest') this.drawcellborders(false, false, true,  true );
+				}
+			}
+		}
+
+		north(z) {				
+			this.checkz(z, 'north');
+			this.ky = this.ky+1;
+			return this;
+		}
+
+		east(z) {
+			this.checkz(z, 'east');
+			this.kx = this.kx+1;
+			return this;
+		}
+
+		west(z) {
+			this.checkz(z, 'west');
+			this.kx = this.kx-1;
+			return this;
+		}
+
+		south(z) {
+			this.checkz(z, 'south');
+			this.ky = this.ky-1;
+			return this;
+		}
+		
+		northwest(z) {
+			this.checkz(z, 'northwest');
+			this.kx = this.kx-1;
+			return this;
+		}
+		
+		westnorth(z) {
+			this.checkz(z, 'westnorth');
+			this.ky = this.ky+1;
+			return this;
+		}
+		
+		westsouth(z) {
+			this.checkz(z, 'westsouth');
+			this.ky = this.ky-1;
+			return this;
+		}
+		
+		northeast(z) {
+			this.checkz(z, 'northeast');
+			this.kx = this.kx+1;
+			return this;
+		}
+
+		eastnorth(z) {
+			this.checkz(z, 'eastnorth');
+			this.ky = this.ky+1;
+			return this;
+		}
+
+		eastsouth(z) {
+			this.checkz(z, 'eastsouth');
+			this.ky = this.ky-1;
+			return this;
+		}
+
+		southeast(z) {
+			this.checkz(z, 'southeast');
+			this.kx = this.kx+1;
+			return this;
+		}
+
+		southwest(z) {
+			this.checkz(z, 'southwest');
+			this.kx = this.kx-1;
+			return this;
+		}
+	}
+
+	CIA.cia_unit = 20;
+	CIA.stroke_width = 2;
+	CIA.OVER = 1;
+	CIA.UNDER = 0;
+
+	CIA.fill = 'white';
+	CIA.stroke = 'black';
+
+	class CIA_a extends CIA {
+		constructor(svg) {
+			super(svg, 3, 3, 1, 0);
+
+			this.north()
+				.north()
+				.northwest()
+				.westsouth()
+				.southeast()
+				.east(CIA.UNDER)
+				.east();
+			
+			this.render();
+		}
+	}
+  
+	class CIA_nj extends CIA {
+		constructor(svg) {
+			super(svg, 4, 4, 2, 0);
+
+			this.north()
+				.north()
+				.northwest()
+				.west(CIA.UNDER)
+				.westnorth()
+				.northeast()
+				.eastsouth()
+				.south(CIA.OVER)
+				.southeast()
+				.east(CIA.UNDER)
+				.east()
+				
+			this.render();
+		}
+	}
+
+	class CIA_e extends CIA {
+		constructor(svg) {
+			super(svg, 4, 4, 1, 0);
+
+			this.north()
+				.north()
+				.north(CIA.UNDER)
+				.northeast()
+				.eastsouth()
+				.south()
+				.southwest()
+				.west(CIA.UNDER)
+				.westnorth()
+				.northeast()
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.east();
+
+			this.render();
+		}
+	}
+
+	class CIA_l extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+
+			this.north()
+				.north()
+				.north(CIA.UNDER)
+				.north()
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.northwest()
+				.westsouth()
+				.south()			
+				.southeast()
+				.east(CIA.UNDER)
+				.eastnorth()
+				.northwest()
+				.west(CIA.OVER)
+				.west(CIA.UNDER)
+				.west(CIA.OVER)
+				.west(CIA.UNDER)
+				.westsouth()
+				.southeast()
+				.east(CIA.OVER)
+				.eastnorth()
+				.north(CIA.UNDER)
+				.northwest()
+				.westsouth()
+				.south(CIA.OVER)
+				.south(CIA.UNDER)
+				.south(CIA.OVER)
+				.south(CIA.UNDER)
+				.southeast()
+				.eastnorth()
+				.north(CIA.OVER)
+				.northwest()
+				.west(CIA.UNDER)
+				.westsouth()
+				.southeast()
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.east()
+				.east(CIA.OVER)
+				.east()
+				.east();
+
+			this.render();
+		}
+	}
+
+	class CIA_o extends CIA {
+		constructor(svg) {
+			super(svg, 5, 5, 3, 0);
+
+			this.north()
+				.north(CIA.OVER)
+				.northwest()
+				.west(CIA.UNDER)
+				.west()
+				.westsouth()
+				.southeast()
+				.eastnorth()
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.northwest()
+				.westsouth()
+				.southeast()
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.eastnorth()
+				.northwest()
+				.westsouth()
+				.south(CIA.UNDER)
+				.south(CIA.OVER)
+				.southeast()
+				.east(CIA.UNDER)
+				.east();
+
+			this.render();
+		}
+	}
+	
+	class CIA_i extends CIA {
+		constructor(svg) {
+			super(svg, 5, 5, 3, 0);
+
+			this.north()
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.northwest()
+				.westsouth()
+				.south(CIA.OVER)
+				.south(CIA.UNDER)
+				.south(CIA.OVER)
+				.southwest()
+				.westnorth()
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.northeast()
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.eastsouth()
+				.southwest()
+				.west(CIA.UNDER)
+				.west(CIA.OVER)
+				.west(CIA.UNDER)
+				.westsouth()
+				.southeast()
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.east();
+
+			this.render();
+		}
+	}
+	
+	class CIA_ie extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+
+			this.north()
+				.north()
+				.north(CIA.UNDER)
+				.north()
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.northwest()
+				.westsouth()
+				.south(CIA.OVER)
+				.southeast()
+				.east(CIA.UNDER)
+				.eastnorth()
+				.northwest()
+				.west(CIA.OVER)
+				.west(CIA.UNDER)
+				.west()
+				.westsouth()
+				.south()
+				.south(CIA.OVER)
+				.south(CIA.UNDER)
+				.southeast()
+				.eastnorth()
+				.north(CIA.OVER)
+				.northwest()
+				.west(CIA.UNDER)
+				.westsouth()
+				.southeast()
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.east()
+				.east(CIA.OVER)
+				.east()
+				.east();
+
+			this.render();
+		}
+	}
+	
 	var edRomanizationCaretPos = 0;
 
 	// Map a romanization to the filename of a Kēlen character. File-extension is added when used.
@@ -260,8 +746,7 @@
 		console.log('kelenClick()');
 		
 		e.stopPropagation();
-		console.log(e);
-
+		
 		var input = '';
 
 		// Find the nearest parent of the clicked element that has a data-kelen or
@@ -412,6 +897,14 @@
 			update_url();
 			updateKelenScript();
 		});
+
+		var cia_a =  new CIA_a(d3.select("#ceremonial-a"));
+		var cia_nj = new CIA_nj(d3.select("#ceremonial-nj"));
+		var cia_e =  new CIA_e(d3.select("#ceremonial-e"));
+		var cia_l =  new CIA_l(d3.select("#ceremonial-l"));
+		var cia_o =  new CIA_o(d3.select("#ceremonial-o"));
+		var cia_i =  new CIA_i(d3.select("#ceremonial-i"));
+		var cia_ie = new CIA_ie(d3.select("#ceremonial-ie"));
 	});
 
 </script>
