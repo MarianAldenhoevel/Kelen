@@ -17,39 +17,115 @@
 		<tbody>
 			<tr>
 				<td data-kelen="a"> 
-					<span class="kelen" >a</span>&nbsp;
+					<span class="kelen">a</span>&nbsp;
 					<img src="font/a.gif" alt="a">&nbsp;
 					<svg class="kelen cia" id="ceremonial-a"></svg>
 				</td>
 				<td data-kelen="ñ"> 
-					<span class="kelen" >ñ</span>&nbsp;
+					<span class="kelen">ñ</span>&nbsp;
 					<img src="font/nj.gif" alt="ñ">&nbsp;
 					<svg class="cia" id="ceremonial-nj"></svg>
 				</td>
 				<td data-kelen="e"> 
-					<span class="kelen" >e</span>&nbsp;
+					<span class="kelen">e</span>&nbsp;
 					<img src="font/e.gif" alt="e">&nbsp;
 					<svg class="cia" id="ceremonial-e"></svg>
 				</td>
 				<td data-kelen="l"> 
-					<span class="kelen" >l</span>&nbsp;
+					<span class="kelen">l</span>&nbsp;
 					<img src="font/l.gif" alt="l">&nbsp;
 					<svg class="cia" id="ceremonial-l"></svg>
 				</td>
 				<td data-kelen="o"> 
-					<span class="kelen" >o</span>&nbsp;
+					<span class="kelen">o</span>&nbsp;
 					<img src="font/o.gif" alt="o">&nbsp;
 					<svg class="cia" id="ceremonial-o"></svg>
 				</td>
 				<td data-kelen="i"> 
-					<span class="kelen" >i</span>&nbsp;
+					<span class="kelen">i</span>&nbsp;
 					<img src="font/i.gif" alt="i">&nbsp;
 					<svg class="cia" id="ceremonial-i"></svg>
 				</td>
 				<td data-kelen="ie"> 
-					<span class="kelen" >ie</span>&nbsp;
+					<span class="kelen">ie</span>&nbsp;
 					<img src="font/ie.gif" alt="ie">&nbsp;
 					<svg class="cia" id="ceremonial-ie"></svg>
+				</td>
+			</tr>
+
+			<tr>
+				<td data-kelen="k"> 
+					<span class="kelen">k</span>&nbsp;
+					<img src="font/k.gif" alt="k">&nbsp;
+					<svg class="kelen cia" id="ceremonial-k"></svg>
+				</td>
+				<td data-kelen="u"> 
+					<span class="kelen">u</span>&nbsp;
+					<img src="font/u.gif" alt="u">&nbsp;
+					<svg class="kelen cia" id="ceremonial-u"></svg>
+				</td>
+				<td data-kelen="n"> 
+					<span class="kelen">n</span>&nbsp;
+					<img src="font/n.gif" alt="n">&nbsp;
+					<svg class="kelen cia" id="ceremonial-n"></svg>
+				</td>
+				<td data-kelen="t"> 
+					<span class="kelen">t</span>&nbsp;
+					<img src="font/t.gif" alt="t">&nbsp;
+					<svg class="kelen cia" id="ceremonial-t"></svg>
+				</td>
+				<td data-kelen="th"> 
+					<span class="kelen">th</span>&nbsp;
+					<img src="font/th.gif" alt="th">&nbsp;
+					<svg class="kelen cia" id="ceremonial-th"></svg>
+				</td>
+				<td data-kelen=m"> 
+					<span class="kelen">m</span>&nbsp;
+					<img src="font/m.gif" alt="m">&nbsp;
+					<svg class="kelen cia" id="ceremonial-m"></svg>
+				</td>
+				<td data-kelen="p"> 
+					<span class="kelen">p</span>&nbsp;
+					<img src="font/p.gif" alt="p">&nbsp;
+					<svg class="kelen cia" id="ceremonial-p"></svg>
+				</td>
+			</tr>
+
+			<tr>
+				<td data-kelen="w"> 
+					<span class="kelen">w</span>&nbsp;
+					<img src="font/w.gif" alt="w">&nbsp;
+					<svg class="kelen cia" id="ceremonial-w"></svg>
+				</td>
+				<td data-kelen="s"> 
+					<span class="kelen">s</span>&nbsp;
+					<img src="font/s.gif" alt="s">&nbsp;
+					<svg class="kelen cia" id="ceremonial-s"></svg>
+				</td>
+				<td data-kelen="c"> 
+					<span class="kelen">c</span>&nbsp;
+					<img src="font/c.gif" alt="c">&nbsp;
+					<svg class="kelen cia" id="ceremonial-c"></svg>
+				</td>
+				<td data-kelen="j"> 
+					<span class="kelen">j</span>&nbsp;
+					<img src="font/j.gif" alt="j">&nbsp;
+					<svg class="kelen cia" id="ceremonial-j"></svg>
+				</td>
+				<td data-kelen="x"> 
+					<span class="kelen">x</span>&nbsp;
+					<img src="font/x.gif" alt="x">&nbsp;
+					<svg class="kelen cia" id="ceremonial-x"></svg>
+				</td>
+				<td data-kelen="h"> 
+					<span class="kelen">h</span>&nbsp;
+					<img src="font/h.gif" alt="h">&nbsp;
+					<svg class="kelen cia" id="ceremonial-h"></svg>
+				</td>
+				<td data-kelen="r"> 
+					<span class="kelen">r</span>&nbsp;
+					<img src="font/r.gif" alt="r">&nbsp;
+					<svg class="kelen cia" id="ceremonial-r"></svg>
 				</td>
 			</tr>
 		</tbody>
@@ -207,8 +283,11 @@
 
 <script>
 
+	// Base class modelling a ceremonial interlace letter.
 	class CIA {
 
+		// point to the svg where you want the letter rendered. height and width
+		// of the bounding box in cells and the coordinates of the starting cell.
 		constructor(svg, kheight, kwidth, kx, ky) {
 			this.svg = svg;
 			this.kheight = kheight;
@@ -217,19 +296,19 @@
 			this.ky = ky;
 			this.fill = CIA.fill;
 
+			// Build an array of tiles. Each holds the z-depth, type of tile 
+			// and fill color.
 			this.ktile = new Array(this.kwidth);
 			for(var x = 0; x < this.kheight; x++) {
-				this.ktile[x] = (new Array(this.kheight)).fill(['', '']);
+				this.ktile[x] = (new Array(this.kheight)).fill([-1, '', '']);
 			}
 
-			this.kz = new Array(this.kwidth);
-			for(var x = 0; x < this.kheight; x++) {
-				this.kz[x] = (new Array(this.kheight)).fill(-1);
-			}
-
+			// Resize the SVG element.
 			this.svg.attr('width', this.kwidth * CIA.cia_unit + CIA.stroke_width).attr('height', this.kheight * CIA.cia_unit + CIA.stroke_width);
 		}
 		
+		// Return the screen-coordinates of the current cell based on current 
+		// cell coordinates kx and ky.		
 		cell() {
 			return {
 				left:   this.kx * CIA.cia_unit + CIA.stroke_width/2,
@@ -239,16 +318,17 @@
 			};
 		}
 
+		// Place a tile at kx/ky at z-depth z. This checks the z-buffer and may
+		// skip the tile if there is already on at greater z-height.
 		checkz(z, tile) {
 			if (!z) { z = 0 };
-			var oldz = this.kz[this.kx][this.ky];
+			var oldz = this.ktile[this.kx][this.ky][0];
 			var log = tile + ' at (' + this.kx + ',' + this.ky + ') old-z=' + oldz + ' new-z=' + z;
 			var result = false; 
 
 			if (oldz < z) {
 				log += ' -> render';
-				this.kz[this.kx][this.ky] = z;
-				this.ktile[this.kx][this.ky] = [tile, this.fill];
+				this.ktile[this.kx][this.ky] = [z, tile, this.fill];
 				result = true;
 			} else {
 				log += ' -> don\'t render';
@@ -258,6 +338,7 @@
 			return result;
 		}
 
+		// Fill cell background with a rect-element.
 		fillcell(fill) {
 			var cell = this.cell();
 			this.svg.append('rect')
@@ -270,6 +351,7 @@
 				.attr('fill', fill);
 		}
 
+		// Draw any combination of four cell borders.
 		drawcellborders(left, top, right, bottom) {
 			var cell = this.cell()
 			
@@ -314,14 +396,15 @@
 			}
 		}
 
+		// Render the whole letter by iterating over the tiles.
 		render() {
 			// console.log('render');
 
 			for(this.kx = 0; this.kx < this.kwidth; this.kx++) {
 				for(this.ky = 0; this.ky < this.kheight; this.ky++) {
 					var tile = this.ktile[this.kx][this.ky];
-					if (tile[0]) {
-						this.fillcell(tile[1]);
+					if (tile[1]) {
+						this.fillcell(tile[2]);
 					}
 				}
 			}
@@ -332,22 +415,25 @@
 					// console.log('(' + this.kx + ',' + this.ky + ') ' +  tile);
 
 														          // left,  top,   right, bottom
-					if (tile[0] == 'north')     this.drawcellborders(true,  false, true,  false);
-					if (tile[0] == 'east')      this.drawcellborders(false, true,  false, true );
-					if (tile[0] == 'west')      this.drawcellborders(false, true,  false, true );
-					if (tile[0] == 'south')     this.drawcellborders(true,  false, true,  false);
-					if (tile[0] == 'northwest') this.drawcellborders(false, true,  true,  false);
-					if (tile[0] == 'westnorth') this.drawcellborders(true,  false, false, true );
-					if (tile[0] == 'westsouth') this.drawcellborders(true,  true,  false, false);
-					if (tile[0] == 'northeast') this.drawcellborders(true,  true,  false, false); 
-					if (tile[0] == 'eastnorth') this.drawcellborders(false, false, true,  true );
-					if (tile[0] == 'eastsouth') this.drawcellborders(false, true,  true,  false);
-					if (tile[0] == 'southeast') this.drawcellborders(true,  false, false, true );
-					if (tile[0] == 'southwest') this.drawcellborders(false, false, true,  true );
+					if (tile[1] == 'north')     this.drawcellborders(true,  false, true,  false);
+					if (tile[1] == 'east')      this.drawcellborders(false, true,  false, true );
+					if (tile[1] == 'west')      this.drawcellborders(false, true,  false, true );
+					if (tile[1] == 'south')     this.drawcellborders(true,  false, true,  false);
+					if (tile[1] == 'northwest') this.drawcellborders(false, true,  true,  false);
+					if (tile[1] == 'westnorth') this.drawcellborders(true,  false, false, true );
+					if (tile[1] == 'westsouth') this.drawcellborders(true,  true,  false, false);
+					if (tile[1] == 'northeast') this.drawcellborders(true,  true,  false, false); 
+					if (tile[1] == 'eastnorth') this.drawcellborders(false, false, true,  true );
+					if (tile[1] == 'eastsouth') this.drawcellborders(false, true,  true,  false);
+					if (tile[1] == 'southeast') this.drawcellborders(true,  false, false, true );
+					if (tile[1] == 'southwest') this.drawcellborders(false, false, true,  true );
 				}
 			}
 		}
 
+		// One method each for the directions and corners. Places a tile at the
+		// current position, considering z-depth, and updates current position
+		// based on the last direction.
 		north(z) {				
 			this.checkz(z, 'north');
 			this.ky = this.ky+1;
@@ -421,6 +507,7 @@
 		}
 	}
 
+	// Static constants.
 	CIA.cia_unit = 20;
 	CIA.stroke_width = 2;
 	CIA.OVER = 1;
@@ -429,6 +516,8 @@
 	CIA.fill = 'white';
 	CIA.stroke = 'black';
 
+	// One descendant of class CIA per ceremonial letter. Each adds a constructor that
+	// builds the path.
 	class CIA_a extends CIA {
 		constructor(svg) {
 			super(svg, 3, 3, 1, 0);
@@ -644,6 +733,118 @@
 				.east();
 
 			this.render();
+		}
+	}
+	
+	class CIA_k extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
+		}
+	}
+	
+	class CIA_u extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
+		}
+	}
+
+	class CIA_n extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
+		}
+	}
+	
+	class CIA_t extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
+		}
+	}
+
+	class CIA_th extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
+		}
+	}
+	
+	class CIA_m extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
+		}
+	}
+
+	class CIA_p extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
+		}
+	}
+	
+	class CIA_w extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
+		}
+	}
+	
+	class CIA_s extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
+		}
+	}
+	
+	class CIA_c extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
+		}
+	}
+	
+	class CIA_j extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
+		}
+	}
+	
+	class CIA_x extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
+		}
+	}
+	
+	class CIA_h extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
+		}
+	}
+	
+	class CIA_r extends CIA {
+		constructor(svg) {
+			super(svg, 7, 7, 4, 0);
+			
+			this.render()
 		}
 	}
 	
@@ -905,6 +1106,22 @@
 		var cia_o =  new CIA_o(d3.select("#ceremonial-o"));
 		var cia_i =  new CIA_i(d3.select("#ceremonial-i"));
 		var cia_ie = new CIA_ie(d3.select("#ceremonial-ie"));
+
+		var cia_k =  new CIA_k(d3.select("#ceremonial-k"));
+		var cia_u =  new CIA_u(d3.select("#ceremonial-u"));
+		var cia_n =  new CIA_n(d3.select("#ceremonial-n"));
+		var cia_t =  new CIA_t(d3.select("#ceremonial-t"));
+		var cia_th = new CIA_th(d3.select("#ceremonial-th"));
+		var cia_m =  new CIA_m(d3.select("#ceremonial-m"));
+		var cia_p =  new CIA_p(d3.select("#ceremonial-p"));
+
+		var cia_w =  new CIA_w(d3.select("#ceremonial-w"));
+		var cia_s =  new CIA_s(d3.select("#ceremonial-s"));
+		var cia_c =  new CIA_c(d3.select("#ceremonial-c"));
+		var cia_j =  new CIA_j(d3.select("#ceremonial-j"));
+		var cia_x =  new CIA_x(d3.select("#ceremonial-x"));
+		var cia_h =  new CIA_h(d3.select("#ceremonial-h"));
+		var cia_r =  new CIA_r(d3.select("#ceremonial-r"));
 	});
 
 </script>
