@@ -288,14 +288,12 @@
 
 		// point to the svg where you want the letter rendered. height and width
 		// of the bounding box in cells and the coordinates of the starting cell.
-		constructor(svg, kheight, kwidth, kx, ky) {
+		constructor(svg, kheight, kwidth) {
 			this.svg = svg;
 			this.kheight = kheight;
 			this.kwidth = kwidth;
-			this.kx = kx;
-			this.ky = ky;
 			this.fill = CIA.fill;
-
+			
 			// Build an array of tiles. Each holds the z-depth, type of tile 
 			// and fill color.
 			this.ktile = new Array(this.kwidth);
@@ -304,9 +302,29 @@
 			}
 
 			// Resize the SVG element.
-			this.svg.attr('width', this.kwidth * CIA.cia_unit + CIA.stroke_width).attr('height', this.kheight * CIA.cia_unit + CIA.stroke_width);
+			this.svg.attr('width', this.kwidth * CIA.cia_unit + CIA.stroke_width).attr('height', this.kheight * CIA.cia_unit + CIA.stroke_width);		
 		}
 		
+		goto(kx, ky, fill) {
+			this.kx = kx;
+			this.ky = ky;
+			if (fill) {
+				this.fill = fill;
+			}
+
+			return this;
+		}
+
+		in() {
+			this.in = [this.kx, this.ky];
+			return this;
+		}
+
+		out() {
+			this.out = [this.kx, this.ky];
+			return this;
+		}
+
 		// Return the screen-coordinates of the current cell based on current 
 		// cell coordinates kx and ky.		
 		cell() {
@@ -520,15 +538,18 @@
 	// builds the path.
 	class CIA_a extends CIA {
 		constructor(svg) {
-			super(svg, 3, 3, 1, 0);
+			super(svg, 3, 3);
 
-			this.north()
+			this.goto(1,0)
+				.in()
+				.north()
 				.north()
 				.northwest()
 				.westsouth()
 				.southeast()
 				.east(CIA.UNDER)
-				.east();
+				.east()
+				.out();
 			
 			this.render();
 		}
@@ -536,9 +557,11 @@
   
 	class CIA_nj extends CIA {
 		constructor(svg) {
-			super(svg, 4, 4, 2, 0);
+			super(svg, 4, 4);
 
-			this.north()
+			this.goto(2,0)
+				.in()
+				.north()
 				.north()
 				.northwest()
 				.west(CIA.UNDER)
@@ -549,6 +572,7 @@
 				.southeast()
 				.east(CIA.UNDER)
 				.east()
+				.out()
 				
 			this.render();
 		}
@@ -556,9 +580,11 @@
 
 	class CIA_e extends CIA {
 		constructor(svg) {
-			super(svg, 4, 4, 1, 0);
+			super(svg, 4, 4);
 
-			this.north()
+			this.goto(1,0)
+				.in()
+				.north()
 				.north()
 				.north(CIA.UNDER)
 				.northeast()
@@ -570,7 +596,8 @@
 				.northeast()
 				.east(CIA.OVER)
 				.east(CIA.UNDER)
-				.east();
+				.east()
+				.out();
 
 			this.render();
 		}
@@ -578,9 +605,11 @@
 
 	class CIA_l extends CIA {
 		constructor(svg) {
-			super(svg, 7, 7, 4, 0);
+			super(svg, 7, 7);
 
-			this.north()
+			this.goto(4,0)
+				.in()
+				.north()
 				.north()
 				.north(CIA.UNDER)
 				.north()
@@ -620,6 +649,10 @@
 				.east()
 				.east(CIA.OVER)
 				.east()
+				.east()
+				.out()
+
+				.goto(3,3, 'black')
 				.east();
 
 			this.render();
@@ -630,7 +663,9 @@
 		constructor(svg) {
 			super(svg, 5, 5, 3, 0);
 
-			this.north()
+			this.goto(3,0)
+				.in()
+				.north()
 				.north(CIA.OVER)
 				.northwest()
 				.west(CIA.UNDER)
@@ -652,7 +687,8 @@
 				.south(CIA.OVER)
 				.southeast()
 				.east(CIA.UNDER)
-				.east();
+				.east()
+				.out();
 
 			this.render();
 		}
@@ -660,9 +696,11 @@
 	
 	class CIA_i extends CIA {
 		constructor(svg) {
-			super(svg, 5, 5, 3, 0);
+			super(svg, 5, 5);
 
-			this.north()
+			this.goto(3,0)
+				.in()
+				.north()
 				.north(CIA.UNDER)
 				.north(CIA.OVER)
 				.north(CIA.UNDER)
@@ -688,7 +726,8 @@
 				.east(CIA.OVER)
 				.east(CIA.UNDER)
 				.east(CIA.OVER)
-				.east();
+				.east()
+				.out();
 
 			this.render();
 		}
@@ -696,9 +735,11 @@
 	
 	class CIA_ie extends CIA {
 		constructor(svg) {
-			super(svg, 7, 7, 4, 0);
+			super(svg, 7, 7);
 
-			this.north()
+			this.goto(4,0)
+				.in()
+				.north()
 				.north()
 				.north(CIA.UNDER)
 				.north()
@@ -730,6 +771,13 @@
 				.east()
 				.east(CIA.OVER)
 				.east()
+				.east()
+				.out()
+
+				.goto(2,4, 'black')
+				.east()
+
+				.goto(3,3, 'black')
 				.east();
 
 			this.render();
@@ -738,23 +786,136 @@
 	
 	class CIA_k extends CIA {
 		constructor(svg) {
-			super(svg, 7, 7, 4, 0);
+			super(svg, 7, 7);
 			
+			this.goto(4,0)
+				.in()
+				.north()
+				.north()
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.northwest()
+				.west(CIA.UNDER)
+				.west(CIA.OVER)
+				.westsouth()
+				.south(CIA.UNDER)
+				.south(CIA.OVER)
+				.southeast()
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.east()
+				.east()
+				.out()
+
+				.goto(3,1, 'green')
+				.eastnorth()
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.northwest()
+				.westsouth()
+				.south(CIA.UNDER)
+				.south(CIA.OVER)
+				.south(CIA.UNDER)
+				.south(CIA.OVER)
+				.southeast()
+
+				.goto(0,3, 'yellow')
+				.southeast(CIA.UNDER)
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.eastnorth()
+				.northwest()
+				.west(CIA.UNDER)
+				.west(CIA.OVER)
+				.west(CIA.UNDER)
+				.west(CIA.OVER)
+				.westsouth();
+
 			this.render()
 		}
 	}
 	
 	class CIA_u extends CIA {
 		constructor(svg) {
-			super(svg, 7, 7, 4, 0);
+			super(svg, 5, 5);
 			
+			this.goto(1,0)
+				.in()
+				.north()
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.northwest()
+				.westsouth()
+				.southeast()
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.east()
+				.out()
+
+				.goto(0,1, 'green')
+				.westnorth()
+				.northeast()
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.eastnorth()
+				.north(CIA.OVER)
+				.northwest()
+				.westsouth()
+				.south(CIA.UNDER)
+				.south(CIA.OVER)
+				.southwest()
+				.east(CIA.UNDER);
+
 			this.render()
 		}
 	}
 
 	class CIA_n extends CIA {
 		constructor(svg) {
-			super(svg, 7, 7, 4, 0);
+			super(svg, 6, 6);
+
+			this.goto(3,0)
+				.in()
+				.north()
+				.north()
+				.north(CIA.UNDER)
+				.north()
+				.northwest()
+				.west(CIA.UNDER)
+				.westsouth()
+				.south(CIA.OVER)
+				.southeast()
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.east()
+				.east()
+				.out()
+
+				.goto(1,1, 'green')
+				.east()
+				.eastnorth()
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.northeast()
+				.east()
+				.eastsouth()
+				.south()
+				.southwest()
+				.west(CIA.UNDER)
+				.west(CIA.OVER)
+				.west(CIA.UNDER)
+				.westsouth()
+				.south()
+				.southeast()
 			
 			this.render()
 		}
@@ -762,32 +923,204 @@
 	
 	class CIA_t extends CIA {
 		constructor(svg) {
-			super(svg, 7, 7, 4, 0);
+			super(svg, 5, 5);
 			
+			this.goto(2,0)
+				.in()
+				.north()
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.northwest()
+				.west()
+				.westsouth()
+				.south()
+				.southeast()
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.east()
+				.out()
+
+				.goto(1,1, 'green')
+				.southeast()
+				.east(CIA.OVER)
+				.eastnorth()
+				.north(CIA.UNDER)
+				.northwest()
+				.west(CIA.OVER)
+				.westsouth()
+				.south(CIA.UNDER);
+
 			this.render()
 		}
 	}
 
 	class CIA_th extends CIA {
 		constructor(svg) {
-			super(svg, 7, 7, 4, 0);
+			super(svg, 7, 7);
 			
+			this.goto(3,0)
+				.in()
+				.north()
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.northwest()
+				.west()
+				.west()
+				.westsouth()
+				.south()
+				.south()
+				.southeast()
+				.east(CIA.OVER)
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.east(CIA.OVER)
+				.east()
+				.out()
+
+				.goto(2,1, 'green')
+				.eastnorth()
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.northwest()
+				.westsouth()
+				.southeast()
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.eastnorth()
+				.northwest()
+				.westsouth()
+				.south(CIA.OVER)
+				.south(CIA.UNDER)
+				.south(CIA.OVER)
+				.southeast()
+				.eastnorth()
+				.northwest()
+				.west(CIA.UNDER)
+				.west(CIA.OVER)
+				.west(CIA.UNDER)
+				.westsouth()
+				.southeast();
+
 			this.render()
 		}
 	}
 	
 	class CIA_m extends CIA {
 		constructor(svg) {
-			super(svg, 7, 7, 4, 0);
+			super(svg, 7, 7);
 			
+			this.goto(3,0)
+				.in()
+				.north()
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.northwest()
+				.west(CIA.OVER)
+				.westsouth()
+				.south(CIA.UNDER)
+				.southeast()
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.east(CIA.OVER)
+				.east()
+				.out()
+
+				.goto(2,1, 'green')
+				.southwest()
+				.westnorth()
+				.northeast()
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.eastsouth()
+				.southwest()
+				.westnorth()
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.northeast()
+				.eastsouth()
+				.southwest()
+				.west(CIA.UNDER)
+				.west(CIA.OVER)
+				.west(CIA.UNDER)
+				.west(CIA.OVER)
+				.westnorth()
+				.north()
+				.northeast()
+				.east()
+				.eastsouth()
+				.south(CIA.UNDER)
+				.south(CIA.OVER)
+				.south(CIA.UNDER)
+				.south(CIA.OVER);
+				
 			this.render()
 		}
 	}
 
 	class CIA_p extends CIA {
 		constructor(svg) {
-			super(svg, 7, 7, 4, 0);
+			super(svg, 7, 7);
 			
+			this.goto(2,0)
+				.in()
+				.north()
+				.north()
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.northeast()
+				.east()
+				.eastsouth()
+				.south()
+				.south(CIA.UNDER)
+				.south(CIA.OVER)
+				.southwest()
+				.west(CIA.UNDER)
+				.west(CIA.OVER)
+				.west()
+				.westnorth()
+				.north()
+				.northeast()
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.east()
+				.east()
+				.out()
+
+				.goto(3,1, 'green')
+				.westnorth()
+				.north(CIA.OVER)
+				.north(CIA.UNDER)
+				.north(CIA.OVER)
+				.northwest()
+				.west(CIA.UNDER)
+				.westsouth()
+				.south(CIA.OVER)
+				.southeast()
+				.east(CIA.UNDER)
+				.east(CIA.OVER)
+				.east(CIA.UNDER)
+				.eastsouth()
+				.south()
+				.southwest()
+				.west();				
+
 			this.render()
 		}
 	}
@@ -913,9 +1246,8 @@
 	roman2font.set('\'', 'skip');
 
 	function update_url() {
-		// Create a linkeable URL to capture the current setup.
-		
-		console.log('update_url()');
+		// Create a linkeable URL to capture the current setup.	
+		// console.log('update_url()');
 		
 		var url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 	
@@ -944,7 +1276,7 @@
 	}
 	
 	function kelenClick(e) {
-		console.log('kelenClick()');
+		// console.log('kelenClick()');
 		
 		e.stopPropagation();
 		
