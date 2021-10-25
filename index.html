@@ -27,7 +27,12 @@
 		<input id="edRomanization" type="text" placeholder="selnirre anlāsa sū-lānōraen;" style="width: 80%"></input>
 	</div>
 	<div>
-		<canvas id="KelenScript"></canvas>
+		<canvas id="KelenScript"></canvas>		
+	</div>	
+	<div>
+		<svg id="KelenCeremonial" style="display: none; border: 1px solid rgb(200,200,200);"></svg>
+	</div>
+	<div>
 		<p class="indent" id="KelenScriptErrors"></p>
 	</div>	
 	<div>	
@@ -293,6 +298,8 @@
 			this.kheight = kheight;
 			this.kwidth = kwidth;
 			this.fill = CIA.fill;
+			this.incell = null;
+			this.outcell = null;
 			
 			// Build an array of tiles. Each holds the z-depth, type of tile 
 			// and fill color.
@@ -316,12 +323,12 @@
 		}
 
 		in() {
-			this.in = [this.kx, this.ky];
+			this.incell = [this.kx, this.ky];
 			return this;
 		}
 
 		out() {
-			this.out = [this.kx, this.ky];
+			this.outcell = [this.kx, this.ky];
 			return this;
 		}
 
@@ -1528,7 +1535,33 @@
 			this.render()
 		}
 	}
-	
+
+	var cia = {
+		'a':  new CIA_a(d3.select("#ceremonial-a")),
+		'nj': new CIA_nj(d3.select("#ceremonial-nj")),
+		'e':  new CIA_e(d3.select("#ceremonial-e")),
+		'l':  new CIA_l(d3.select("#ceremonial-l")),
+		'o':  new CIA_o(d3.select("#ceremonial-o")),
+		'i':  new CIA_i(d3.select("#ceremonial-i")),
+		'ie': new CIA_ie(d3.select("#ceremonial-ie")),
+
+		'k':  new CIA_k(d3.select("#ceremonial-k")),
+		'u':  new CIA_u(d3.select("#ceremonial-u")),
+		'n':  new CIA_n(d3.select("#ceremonial-n")),
+		't':  new CIA_t(d3.select("#ceremonial-t")),
+		'th': new CIA_th(d3.select("#ceremonial-th")),
+		'm':  new CIA_m(d3.select("#ceremonial-m")),
+		'p':  new CIA_p(d3.select("#ceremonial-p")),
+
+		'w':  new CIA_w(d3.select("#ceremonial-w")),
+		's':  new CIA_s(d3.select("#ceremonial-s")),
+		'c':  new CIA_c(d3.select("#ceremonial-c")),
+		'j':  new CIA_j(d3.select("#ceremonial-j")),
+		'x':  new CIA_x(d3.select("#ceremonial-x")),
+		'h':  new CIA_h(d3.select("#ceremonial-h")),
+		'r':  new CIA_r(d3.select("#ceremonial-r"))
+	};
+
 	var edRomanizationCaretPos = 0;
 
 	// Map a romanization to the filename of a Kēlen character. File-extension is added when used.
@@ -1671,6 +1704,7 @@
 
 		$('#KelenScriptErrors').empty();
 		var glyphs = [];
+		var cialetters = [];
 		var errors = [];
 
 		while(roman) {
@@ -1713,13 +1747,15 @@
 						// No. Silently skip.
 					} else {
 						// Add an image to render.
-						glyphs.push($('#kelen-glyph-' + roman2font.get(char))[0]);
+						var fontchar = roman2font.get(char);
+						glyphs.push($('#kelen-glyph-' + fontchar)[0]);
+						cialetters.push(cia[fontchar]);
 					}
-				} else {
+		 		} else {
 					// No. Skip this character. If we have not yet reported it as non-kelen add an error message.
 					if (errors.indexOf(char) == -1) {
 						errors.push(char);
-						$('#KelenScriptErrors').append('<span><span class="kelen">' + char + '</span> is not Kēlen</span><br>');
+						$('#KelenScriptErrors').append('<span><span class="kelen">' + char + '</span> is not Kēlen</span><br>');					
 					}				
 				}
 			} else {
@@ -1729,7 +1765,7 @@
 			}
 		}
 
-		// Now render all the glyphs to the canvas.
+		// Now render all the glyphs to the script-canvas.
 		var KelenScript = $('#KelenScript')[0];
    		var context = KelenScript.getContext("2d");
    		
@@ -1749,6 +1785,57 @@
 			context.drawImage(glyph, x, 0),
 			x = x + glyph.width;
 		};
+
+		// And then render all the ceremonial-svgs to the ceremonial-svg.
+		// Get target-SVG as d3-selection:
+		var KelenCeremonial = d3.select('#KelenCeremonial');
+		KelenCeremonial.html('');
+		var rotationgroup = KelenCeremonial.append('g');
+
+		var kx = 0;
+		var maxkx = 0;
+		var ky = 0;
+		var klineheight = 0;
+		//var n = 0;
+		for (var letter of cialetters) {
+			var svg = letter.svg;
+			rotationgroup
+				.append('g')
+					.attr('transform', 'translate(' + (CIA.cia_unit * kx) + ',' + (CIA.cia_unit * ky) + ')')
+					.attr('class', letter.svg.node().id)
+				.append('use')
+					.attr('href', '#' + svg.node().id);
+			
+					kx = kx + letter.kwidth;
+			klineheight = Math.max(klineheight, letter.kheight);
+			
+			/*
+			n = n+1;
+			// "linebreak"
+			if (n%3 == 0) {
+				ky = ky + klineheight;
+				maxkx = Math.max(kx, maxkx);
+				kx = 0;
+				klineheight = 0;
+			}
+			*/
+		}
+
+		// "linebreak"
+		if (klineheight) {
+			ky = ky + klineheight;
+			maxkx = Math.max(kx, maxkx);
+			kx = 0;
+			klineheight = 0;
+		}
+
+		// Resize SVG to fit.
+		var w = maxkx * CIA.cia_unit + CIA.stroke_width;
+		var h = ky * CIA.cia_unit + CIA.stroke_width;
+		
+		// rotationgroup.attr('transform', 'rotate(45 ' + (w/2) + ' ' + (h/2) + ')');
+		
+		KelenCeremonial.attr('width', w).attr('height', h);		
 	}
 
 	$(document).ready(function() {
@@ -1782,32 +1869,6 @@
 			update_url();
 			updateKelenScript();
 		});
-
-		var cia = {
-			a:  new CIA_a(d3.select("#ceremonial-a")),
-			nj: new CIA_nj(d3.select("#ceremonial-nj")),
-			e:  new CIA_e(d3.select("#ceremonial-e")),
-			l:  new CIA_l(d3.select("#ceremonial-l")),
-			o:  new CIA_o(d3.select("#ceremonial-o")),
-			i:  new CIA_i(d3.select("#ceremonial-i")),
-			ie: new CIA_ie(d3.select("#ceremonial-ie")),
-
-			k:  new CIA_k(d3.select("#ceremonial-k")),
-			u:  new CIA_u(d3.select("#ceremonial-u")),
-			n:  new CIA_n(d3.select("#ceremonial-n")),
-			t:  new CIA_t(d3.select("#ceremonial-t")),
-			th: new CIA_th(d3.select("#ceremonial-th")),
-			m:  new CIA_m(d3.select("#ceremonial-m")),
-			p:  new CIA_p(d3.select("#ceremonial-p")),
-
-			w:  new CIA_w(d3.select("#ceremonial-w")),
-			s:  new CIA_s(d3.select("#ceremonial-s")),
-			c:  new CIA_c(d3.select("#ceremonial-c")),
-			j:  new CIA_j(d3.select("#ceremonial-j")),
-			x:  new CIA_x(d3.select("#ceremonial-x")),
-			h:  new CIA_h(d3.select("#ceremonial-h")),
-			r:  new CIA_r(d3.select("#ceremonial-r"))
-		};
 
 	});
 
